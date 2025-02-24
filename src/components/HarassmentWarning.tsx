@@ -68,9 +68,9 @@ export const HarassmentWarning: React.FC = () => {
 
   const getTitleParts = (title: string) => {
     const parts = {
-      marriage: ["結婚催促", "レーダー"],
-      children: ["子孫継承強要", "センサー"],
-      age: ["年齢干渉", "スキャナー"]
+      marriage: ["結婚催促", "検知"],
+      children: ["子孫継承強要", "検知"],
+      age: ["年齢干渉", "検知"]
     };
     return parts[title as keyof typeof parts] || [title, ""];
   };
@@ -102,7 +102,8 @@ export const HarassmentWarning: React.FC = () => {
                       onClick={() => startWarning(key as HarassmentType)}
                       className="relative w-full bg-white py-5 px-8 rounded-2xl shadow-lg 
                         hover:bg-red-50 active:bg-red-100 transition-all duration-300 
-                        border-2 border-red-100 group overflow-hidden"
+                        border-2 border-red-100 group overflow-hidden
+                        hover:scale-[1.02] hover:shadow-xl"
                     >
                       {/* 警告線パターン */}
                       <div className="absolute inset-0 bg-gradient-to-r from-yellow-500/10 to-red-500/10
@@ -111,11 +112,25 @@ export const HarassmentWarning: React.FC = () => {
                       
                       <div className="relative flex items-center justify-between">
                         <div className="flex flex-col lg:flex-row lg:items-center lg:gap-2">
-                          <div className="text-xl sm:text-2xl font-togalite tracking-wider leading-tight">
-                            {getTitleParts(key)[0]}
-                          </div>
-                          <div className="text-xl sm:text-2xl font-togalite tracking-wider leading-tight">
-                            {getTitleParts(key)[1]}
+                          <div className="flex lg:items-center gap-2">
+                            <img 
+                              src="/images/2325796.png" 
+                              alt=""
+                              className="w-8 h-8 sm:w-10 sm:h-10 
+                                group-hover:scale-110 group-focus:scale-110 group-active:scale-110 
+                                transition-all self-center"
+                            />
+                            <div className="flex flex-col">
+                              <div className="text-xl sm:text-2xl font-togalite tracking-wider leading-tight
+                                group-hover:scale-105 group-focus:scale-105 group-active:scale-105 
+                                transition-transform origin-left">
+                                {getTitleParts(key)[0]}
+                              </div>
+                              <div className="text-xl sm:text-2xl font-togalite tracking-wider leading-tight
+                                group-hover:scale-105 transition-transform origin-left">
+                                {getTitleParts(key)[1]}
+                              </div>
+                            </div>
                           </div>
                         </div>
 
@@ -173,10 +188,10 @@ export const HarassmentWarning: React.FC = () => {
 
                       {/* 罰則内容 */}
                       <div className="p-8 bg-black rounded-lg border border-red-500/30">
-                        <div className="text-2xl sm:text-3xl font-togalite text-white mb-6">
+                        <div className="text-xl sm:text-2xl font-togalite text-white mb-6">
                           違反者への執行命令
                         </div>
-                        <div className="text-xl sm:text-2xl font-togalite text-white">
+                        <div className="text-2xl sm:text-3xl font-togalite text-white">
                           {currentFine}
                         </div>
                       </div>

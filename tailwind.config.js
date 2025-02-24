@@ -24,6 +24,9 @@ module.exports = {
           '90%': { transform: 'translateX(-2px)' },
         },
       },
+      cursor: {
+        'warning': 'url(/images/2325796.png) 16 16, pointer'
+      },
     },
   },
   plugins: [],

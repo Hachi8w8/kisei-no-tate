@@ -2,7 +2,7 @@ import { HarassmentTypes } from '../types/harassment';
 
 export const harassmentTypes: HarassmentTypes = {
   marriage: {
-    title: "結婚催促\nレーダー",
+    title: "結婚催促\n検知",
     warnings: [
       "警告：重大な結婚圧力違反を検知",
       "緊急：深刻な個人の権利侵害を確認",
@@ -15,7 +15,7 @@ export const harassmentTypes: HarassmentTypes = {
     ]
   },
   children: {
-    title: "子孫継承強要\nセンサー",
+    title: "子孫継承強要\n検知",
     warnings: [
       "警告：重大な子育て強要違反を検知",
       "緊急：深刻な生活介入行為を確認",
@@ -28,7 +28,7 @@ export const harassmentTypes: HarassmentTypes = {
     ]
   },
   age: {
-    title: "年齢干渉\nスキャナー",
+    title: "年齢干渉\n検知",
     warnings: [
       "警告：重大な年齢差別行為を検知",
       "緊急：世代間抑圧行為を確認",
