@@ -10,6 +10,8 @@ export const HarassmentWarning: React.FC = () => {
   const [selectedType, setSelectedType] = useState<HarassmentType | null>(null);
   const [alertLevel, setAlertLevel] = useState(0);
   const [isEmergencyFlash, setIsEmergencyFlash] = useState(false);
+  const [currentWarning, setCurrentWarning] = useState<string>('');
+  const [currentFine, setCurrentFine] = useState<string>('');
 
   const { speak, playAlarm, stopAlarm } = useAudio();
 
@@ -37,12 +39,12 @@ export const HarassmentWarning: React.FC = () => {
       const warning = harassmentTypes[type].warnings[
         Math.floor(Math.random() * harassmentTypes[type].warnings.length)
       ];
-      await speak(warning);
+      setCurrentWarning(warning);
       
       const fine = harassmentTypes[type].fines[
         Math.floor(Math.random() * harassmentTypes[type].fines.length)
       ];
-      await speak(fine);
+      setCurrentFine(fine);
       await speak(`繰り返します。${fine}`);
 
       await new Promise(resolve => setTimeout(resolve, 1000));
@@ -102,18 +104,18 @@ export const HarassmentWarning: React.FC = () => {
                       
                       <div className="relative flex items-center justify-between">
                         <div className="flex flex-col lg:flex-row lg:items-center lg:gap-2">
-                          <div className="text-xl sm:text-2xl font-bold tracking-wider leading-tight">
+                          <div className="text-xl sm:text-2xl font-togalite tracking-wider leading-tight">
                             {getTitleParts(key)[0]}
                           </div>
-                          <div className="text-xl sm:text-2xl font-bold tracking-wider leading-tight">
+                          <div className="text-xl sm:text-2xl font-togalite tracking-wider leading-tight">
                             {getTitleParts(key)[1]}
                           </div>
                         </div>
 
                         <div className="flex flex-col items-end gap-1.5">
                           <div className="flex items-center gap-2">
-                            <div className="w-1.5 h-1.5 rounded-full bg-green-500 animate-pulse" />
-                            <span className="text-sm text-red-500 opacity-75 tracking-wider">ALERT READY</span>
+                            <div className="w-1.5 h-1.5 rounded-full bg-red-500 animate-pulse" />
+                            <span className="text-sm text-red-500 opacity-75 tracking-wider">READY</span>
                           </div>
                           <Volume2 className="w-7 h-7 sm:w-8 sm:h-8 text-red-500 
                             group-hover:scale-110 transition-transform" />
@@ -126,9 +128,48 @@ export const HarassmentWarning: React.FC = () => {
 
               {isAnalyzing && (
                 <div className="h-[calc(100vh-200px)] flex items-center justify-center">
-                  <div className="text-red-500 text-center space-y-4">
-                    <div className="animate-[pulse_1s_ease-in-out_infinite] text-3xl font-bold">
-                      ⚠️ 違反行為検出中 ⚠️
+                  <div className="w-full max-w-3xl bg-black p-8 rounded-lg">
+                    {/* レーダーアニメーション */}
+                    <div className="relative w-40 h-40 mx-auto">
+                      <div className="absolute inset-0 border-4 border-red-500/30 rounded-full" />
+                      <div className="absolute inset-0 border-t-4 border-red-500 rounded-full 
+                        animate-[spin_2s_linear_infinite]" />
+                      <div className="absolute inset-0 flex items-center justify-center">
+                        <span className="text-5xl animate-[pulse_1s_ease-in-out_infinite]">⚠️</span>
+                      </div>
+                    </div>
+
+                    {/* 警告表示 */}
+                    <div className="space-y-8 text-center">
+                      <div>
+                        <div className="text-3xl sm:text-4xl font-togalite font-bold text-red-500 mb-4">
+                          違反行為検出
+                        </div>
+                        <div className="text-xl sm:text-2xl font-togalite text-green-400">
+                          解析完了
+                        </div>
+                      </div>
+
+                      {/* 警告メッセージ */}
+                      <div className="p-6 bg-red-500/10 border border-red-500/30 rounded-lg">
+                        <div className="text-red-500">
+                          <div className="text-xl sm:text-2xl font-togalite font-bold mb-2">
+                            {currentWarning}
+                          </div>
+                        </div>
+                      </div>
+
+                      {/* 罰則内容 */}
+                      <div className="p-6 bg-green-400/10 border border-green-400/30 rounded-lg">
+                        <div className="text-green-400">
+                          <div className="text-lg sm:text-xl font-togalite mb-2 opacity-80">
+                            執行内容
+                          </div>
+                          <div className="text-xl sm:text-2xl font-togalite font-bold animate-[pulse_1s_ease-in-out_infinite]">
+                            {currentFine}
+                          </div>
+                        </div>
+                      </div>
                     </div>
                   </div>
                 </div>
