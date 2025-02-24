@@ -75,6 +75,12 @@ export const HarassmentWarning: React.FC = () => {
     return parts[title as keyof typeof parts] || [title, ""];
   };
 
+  // メッセージを分割する関数を追加
+  const splitWarningMessage = (message: string) => {
+    const [level, detail] = message.split('：');
+    return { level, detail };
+  };
+
   return (
     <div className="w-full min-h-screen bg-white flex flex-col">
       <div className={`w-full flex-1 ${
@@ -131,21 +137,39 @@ export const HarassmentWarning: React.FC = () => {
                 <div className="h-[calc(100vh-200px)] flex items-center justify-center">
                   <div className="w-full max-w-3xl bg-black p-8 rounded-lg border-2 border-red-500/30">
                     <div className="space-y-12 text-center">
-                      {/* 警告タイトル - シンプルに */}
-                      <div className="flex items-center justify-center gap-4">
-                        <span className="text-5xl text-yellow-500">⚠️</span>
-                        <div className="text-4xl sm:text-5xl font-togalite text-red-500">
-                          {selectedType && getTitleParts(selectedType)[0]}行為を検出
+                      {/* 警告タイトル */}
+                      <div className="space-y-8">
+                        {/* タイトル */}
+                        <div className="flex items-center justify-center gap-4">
+                          <span className="text-5xl text-yellow-500 animate-blink">⚠️</span>
+                          <div className="text-4xl sm:text-5xl font-togalite text-red-500 
+                            animate-blink
+                            [text-shadow:0_0_10px_rgba(239,68,68,0.5)]">
+                            {selectedType && getTitleParts(selectedType)[0]}行為を検出
+                          </div>
+                          <span className="text-5xl text-yellow-500 animate-blink">⚠️</span>
                         </div>
-                        <span className="text-5xl text-yellow-500">⚠️</span>
+
+                        {/* 警告レベルと詳細 */}
+                        <div className="p-8 bg-black rounded-lg border border-red-500/30">
+                          <div className="flex flex-col items-center justify-center gap-2">
+                            <div className="text-2xl text-red-500 font-togalite">
+                              {currentWarning && splitWarningMessage(currentWarning).level}
+                            </div>
+                            <div className="text-4xl sm:text-5xl font-togalite text-red-500
+                              [text-shadow:0_0_10px_rgba(239,68,68,0.5)]">
+                              {currentWarning && splitWarningMessage(currentWarning).detail}
+                            </div>
+                          </div>
+                        </div>
                       </div>
 
-                      {/* 警告メッセージ */}
-                      <div className="p-8 bg-black rounded-lg border border-red-500/30">
-                        <div className="text-xl sm:text-2xl font-togalite text-red-500 animate-[fade_2s_ease-in-out_infinite]">
+                      {/* 警告メッセージは不要なので削除 */}
+                      {/* <div className="p-8 bg-black rounded-lg border border-red-500/30">
+                        <div className="text-xl sm:text-2xl font-togalite text-red-500 animate-blink">
                           {currentWarning}
                         </div>
-                      </div>
+                      </div> */}
 
                       {/* 罰則内容 */}
                       <div className="p-8 bg-black rounded-lg border border-red-500/30">

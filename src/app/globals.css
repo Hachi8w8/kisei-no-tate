@@ -14,13 +14,16 @@
   animation: typing 2s steps(40, end);
 }
 
-@keyframes fade {
-  0%, 100% { opacity: 0.4; }
-  50% { opacity: 1; }
+@keyframes blink {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.3; }
 }
 
-@keyframes progress {
-  0% { width: 0; }
-  50% { width: 100%; }
-  100% { width: 0; }
+@keyframes shake {
+  0%, 100% { transform: translateX(0); }
+  10% { transform: translateX(-2px); }
+  30% { transform: translateX(2px); }
+  50% { transform: translateX(-2px); }
+  70% { transform: translateX(2px); }
+  90% { transform: translateX(-2px); }
 } 
