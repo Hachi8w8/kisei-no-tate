@@ -27,7 +27,7 @@ module.exports = {
         },
       },
       cursor: {
-        'warning': 'url(/images/2325796.png) 16 16, pointer'
+        'warning': 'url(/kisei-no-tate/images/2325796.png) 16 16, pointer'
       },
     },
   },

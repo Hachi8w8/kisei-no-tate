@@ -17,8 +17,11 @@ const nextConfig = {
   },
   output: 'export',
   basePath: '/kisei-no-tate',
+  assetPrefix: '/kisei-no-tate/',
   images: {
     unoptimized: true,
+    loader: 'custom',
+    path: '/kisei-no-tate'
   },
   distDir: 'docs',
   trailingSlash: true

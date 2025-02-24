@@ -117,7 +117,7 @@ export const HarassmentWarning: React.FC = () => {
                         <div className="flex flex-col lg:flex-row lg:items-center lg:gap-2">
                           <div className="flex lg:items-center gap-2">
                             <img 
-                              src="/images/2325796.png" 
+                              src="/kisei-no-tate/images/2325796.png" 
                               alt=""
                               className="w-8 h-8 sm:w-10 sm:h-10 
                                 group-hover:scale-110 group-focus:scale-110 group-active:scale-110 
