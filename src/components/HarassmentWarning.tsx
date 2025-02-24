@@ -25,26 +25,27 @@ export const HarassmentWarning: React.FC = () => {
   }, [isEmergencyFlash]);
 
   const startWarning = async (type: HarassmentType): Promise<void> => {
+    // 先に警告テキストを設定
+    const warning = harassmentTypes[type].warnings[
+      Math.floor(Math.random() * harassmentTypes[type].warnings.length)
+    ];
+    const fine = harassmentTypes[type].fines[
+      Math.floor(Math.random() * harassmentTypes[type].fines.length)
+    ];
+    
+    setCurrentWarning(warning);
+    setCurrentFine(fine);
     setSelectedType(type);
     setIsAnalyzing(true);
     setIsEmergencyFlash(true);
 
     try {
       playAlarm();
-
       await speak("違反行為検出");
       await new Promise(resolve => setTimeout(resolve, 500));
       await speak("違反行為検出");
-      
-      const warning = harassmentTypes[type].warnings[
-        Math.floor(Math.random() * harassmentTypes[type].warnings.length)
-      ];
-      setCurrentWarning(warning);
-      
-      const fine = harassmentTypes[type].fines[
-        Math.floor(Math.random() * harassmentTypes[type].fines.length)
-      ];
-      setCurrentFine(fine);
+      await speak(warning);
+      await speak(fine);
       await speak(`繰り返します。${fine}`);
 
       await new Promise(resolve => setTimeout(resolve, 1000));
@@ -128,46 +129,31 @@ export const HarassmentWarning: React.FC = () => {
 
               {isAnalyzing && (
                 <div className="h-[calc(100vh-200px)] flex items-center justify-center">
-                  <div className="w-full max-w-3xl bg-black p-8 rounded-lg">
-                    {/* レーダーアニメーション */}
-                    <div className="relative w-40 h-40 mx-auto">
-                      <div className="absolute inset-0 border-4 border-red-500/30 rounded-full" />
-                      <div className="absolute inset-0 border-t-4 border-red-500 rounded-full 
-                        animate-[spin_2s_linear_infinite]" />
-                      <div className="absolute inset-0 flex items-center justify-center">
-                        <span className="text-5xl animate-[pulse_1s_ease-in-out_infinite]">⚠️</span>
-                      </div>
-                    </div>
-
-                    {/* 警告表示 */}
-                    <div className="space-y-8 text-center">
-                      <div>
-                        <div className="text-3xl sm:text-4xl font-togalite font-bold text-red-500 mb-4">
-                          違反行為検出
+                  <div className="w-full max-w-3xl bg-black p-8 rounded-lg border-2 border-red-500/30">
+                    <div className="space-y-12 text-center">
+                      {/* 警告タイトル - シンプルに */}
+                      <div className="flex items-center justify-center gap-4">
+                        <span className="text-5xl text-yellow-500">⚠️</span>
+                        <div className="text-4xl sm:text-5xl font-togalite text-red-500">
+                          {selectedType && getTitleParts(selectedType)[0]}行為を検出
                         </div>
-                        <div className="text-xl sm:text-2xl font-togalite text-green-400">
-                          解析完了
-                        </div>
+                        <span className="text-5xl text-yellow-500">⚠️</span>
                       </div>
 
                       {/* 警告メッセージ */}
-                      <div className="p-6 bg-red-500/10 border border-red-500/30 rounded-lg">
-                        <div className="text-red-500">
-                          <div className="text-xl sm:text-2xl font-togalite font-bold mb-2">
-                            {currentWarning}
-                          </div>
+                      <div className="p-8 bg-black rounded-lg border border-red-500/30">
+                        <div className="text-xl sm:text-2xl font-togalite text-red-500 animate-[fade_2s_ease-in-out_infinite]">
+                          {currentWarning}
                         </div>
                       </div>
 
                       {/* 罰則内容 */}
-                      <div className="p-6 bg-green-400/10 border border-green-400/30 rounded-lg">
-                        <div className="text-green-400">
-                          <div className="text-lg sm:text-xl font-togalite mb-2 opacity-80">
-                            執行内容
-                          </div>
-                          <div className="text-xl sm:text-2xl font-togalite font-bold animate-[pulse_1s_ease-in-out_infinite]">
-                            {currentFine}
-                          </div>
+                      <div className="p-8 bg-black rounded-lg border border-red-500/30">
+                        <div className="text-2xl sm:text-3xl font-togalite text-white mb-6">
+                          違反者への執行命令
+                        </div>
+                        <div className="text-xl sm:text-2xl font-togalite text-white">
+                          {currentFine}
                         </div>
                       </div>
                     </div>

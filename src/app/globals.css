@@ -12,4 +12,15 @@
   overflow: hidden;
   white-space: nowrap;
   animation: typing 2s steps(40, end);
+}
+
+@keyframes fade {
+  0%, 100% { opacity: 0.4; }
+  50% { opacity: 1; }
+}
+
+@keyframes progress {
+  0% { width: 0; }
+  50% { width: 100%; }
+  100% { width: 0; }
 } 
