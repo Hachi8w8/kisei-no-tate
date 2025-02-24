@@ -1,8 +1,9 @@
 {
   "scripts": {
     "dev": "next dev",
-    "build": "next build",
-    "start": "next start"
+    "build": "next build && cp -r docs/_next/static/* docs/static/",
+    "start": "next start",
+    "deploy": "next build && cp -r docs/_next/static/* docs/static/"
   },
   "name": "harassment",
   "version": "1.0.0",
