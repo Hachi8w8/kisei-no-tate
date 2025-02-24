@@ -14,7 +14,12 @@ const nextConfig = {
       }
     });
     return config;
-  }
+  },
+  output: 'export',
+  basePath: '/kisei-no-tate',  // リポジトリ名に修正
+  images: {
+    unoptimized: true,
+  },
 }
 
 module.exports = nextConfig 
