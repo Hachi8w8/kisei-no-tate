@@ -6,11 +6,6 @@ const togalite = localFont({
   display: 'swap',
 })
 
-const anotherFont = localFont({
-  src: '../../public/fonts/別のフォント.ttf',  // .otf, .ttf, .woff2など対応
-  display: 'swap',
-})
-
 export const metadata = {
   title: '帰省の盾',
   description: '過干渉防衛システム',
