@@ -1,9 +1,11 @@
-import { useCallback } from 'react';
+import { useCallback, useRef } from 'react';
 import { HarassmentType } from '../types/harassment';
 
-type SoundType = 'emergency' | 'alert' | 'thinking';
+type SoundType = 'alert' | 'thinking';
 
 export const useAudio = () => {
+  const alarmRef = useRef<HTMLAudioElement | null>(null);
+
   const speak = useCallback((text: string, rate: number = 1.3): Promise<void> => {
     return new Promise<void>((resolve) => {
       window.speechSynthesis.cancel();
@@ -18,6 +20,25 @@ export const useAudio = () => {
     });
   }, []);
 
+  const playAlarm = useCallback((): void => {
+    if (alarmRef.current) {
+      alarmRef.current.pause();
+      alarmRef.current = null;
+    }
+    const audio = new Audio('/sounds/alarm.mp3');
+    audio.loop = true;
+    audio.volume = 0.5;
+    audio.play().catch(console.error);
+    alarmRef.current = audio;
+  }, []);
+
+  const stopAlarm = useCallback((): void => {
+    if (alarmRef.current) {
+      alarmRef.current.pause();
+      alarmRef.current = null;
+    }
+  }, []);
+
   const playSound = useCallback((type: SoundType): Promise<void> => {
     return new Promise<void>((resolve) => {
       const AudioContext = window.AudioContext || window.webkitAudioContext;
@@ -29,12 +50,6 @@ export const useAudio = () => {
       gainNode.connect(audioContext.destination);
 
       const soundConfigs = {
-        emergency: {
-          type: 'sawtooth' as OscillatorType,
-          frequency: [440, 880],
-          duration: 0.3,
-          gain: 0.3
-        },
         alert: {
           type: 'square' as OscillatorType,
           frequency: [880, 440],
@@ -69,5 +84,5 @@ export const useAudio = () => {
     });
   }, []);
 
-  return { speak, playSound };
+  return { speak, playSound, playAlarm, stopAlarm };
 }; 

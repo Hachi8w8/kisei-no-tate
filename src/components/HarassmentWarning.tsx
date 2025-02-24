@@ -4,16 +4,14 @@ import { harassmentTypes } from '../constants/harassmentData';
 import { useAudio } from '../hooks/useAudio';
 import { HarassmentType } from '../types/harassment';
 import { WarningHeader } from './WarningHeader';
-import { AnalysisProgress } from './AnalysisProgress';
 
 export const HarassmentWarning: React.FC = () => {
   const [isAnalyzing, setIsAnalyzing] = useState(false);
   const [selectedType, setSelectedType] = useState<HarassmentType | null>(null);
   const [alertLevel, setAlertLevel] = useState(0);
   const [isEmergencyFlash, setIsEmergencyFlash] = useState(false);
-  const [analysisProgress, setAnalysisProgress] = useState(0);
 
-  const { speak, playSound } = useAudio();
+  const { speak, playAlarm, stopAlarm } = useAudio();
 
   useEffect(() => {
     if (isEmergencyFlash) {
@@ -24,60 +22,54 @@ export const HarassmentWarning: React.FC = () => {
     }
   }, [isEmergencyFlash]);
 
-  const playThinkingBeeps = async (count: number): Promise<void> => {
-    for (let i = 0; i < count; i++) {
-      await playSound('thinking');
-      await new Promise<void>(resolve => setTimeout(resolve, 300));
-      setAnalysisProgress(prev => prev + (100 / count));
-    }
-  };
-
   const startWarning = async (type: HarassmentType): Promise<void> => {
     setSelectedType(type);
     setIsAnalyzing(true);
     setIsEmergencyFlash(true);
-    setAnalysisProgress(0);
 
     try {
-      await playSound('emergency');
-      await speak("警告システム起動。違反行為の分析を開始します。");
-      
+      playAlarm();
+
+      await speak("違反行為検出");
       await new Promise(resolve => setTimeout(resolve, 500));
-      await playThinkingBeeps(5);
+      await speak("違反行為検出");
       
-      await playSound('alert');
       const warning = harassmentTypes[type].warnings[
         Math.floor(Math.random() * harassmentTypes[type].warnings.length)
       ];
       await speak(warning);
-      await new Promise(resolve => setTimeout(resolve, 1000));
-
-      setAnalysisProgress(0);
-      await speak("違反者への措置を決定します。");
-      
-      await new Promise(resolve => setTimeout(resolve, 500));
-      await playThinkingBeeps(2);
       
       const fine = harassmentTypes[type].fines[
         Math.floor(Math.random() * harassmentTypes[type].fines.length)
       ];
       await speak(fine);
-      await new Promise(resolve => setTimeout(resolve, 500));
       await speak(`繰り返します。${fine}`);
+
+      await new Promise(resolve => setTimeout(resolve, 1000));
+      stopAlarm();
 
       setTimeout(() => {
         setIsAnalyzing(false);
         setIsEmergencyFlash(false);
         setSelectedType(null);
-        setAnalysisProgress(0);
-      }, 1000);
+      }, 500);
 
     } catch (error) {
       console.error('Warning sequence failed:', error);
+      stopAlarm();
       setIsAnalyzing(false);
       setIsEmergencyFlash(false);
-      setAnalysisProgress(0);
+      setSelectedType(null);
     }
+  };
+
+  const getTitleParts = (title: string) => {
+    const parts = {
+      marriage: ["結婚催促", "レーダー"],
+      children: ["子孫継承強要", "センサー"],
+      age: ["年齢干渉", "スキャナー"]
+    };
+    return parts[title as keyof typeof parts] || [title, ""];
   };
 
   return (
@@ -99,25 +91,47 @@ export const HarassmentWarning: React.FC = () => {
                     <button
                       key={key}
                       onClick={() => startWarning(key as HarassmentType)}
-                      className="w-full bg-white py-6 px-8 rounded-2xl shadow-lg 
+                      className="relative w-full bg-white py-5 px-8 rounded-2xl shadow-lg 
                         hover:bg-red-50 active:bg-red-100 transition-all duration-300 
-                        border-2 border-red-100 flex items-center justify-between group"
+                        border-2 border-red-100 group overflow-hidden"
                     >
-                      <span className="text-xl sm:text-2xl font-bold tracking-wider">
-                        {value.title}
-                      </span>
-                      <Volume2 className="w-8 h-8 sm:w-10 sm:h-10 text-red-500 
-                        group-hover:scale-110 transition-transform" />
+                      {/* 警告線パターン */}
+                      <div className="absolute inset-0 bg-gradient-to-r from-yellow-500/10 to-red-500/10
+                        [mask-image:linear-gradient(45deg,#000_25%,transparent_25%,transparent_50%,#000_50%,#000_75%,transparent_75%,transparent)]
+                        bg-[length:24px_24px] opacity-0 group-hover:opacity-100 transition-opacity" />
+                      
+                      <div className="relative flex items-center justify-between">
+                        <div className="flex flex-col lg:flex-row lg:items-center lg:gap-2">
+                          <div className="text-xl sm:text-2xl font-bold tracking-wider leading-tight">
+                            {getTitleParts(key)[0]}
+                          </div>
+                          <div className="text-xl sm:text-2xl font-bold tracking-wider leading-tight">
+                            {getTitleParts(key)[1]}
+                          </div>
+                        </div>
+
+                        <div className="flex flex-col items-end gap-1.5">
+                          <div className="flex items-center gap-2">
+                            <div className="w-1.5 h-1.5 rounded-full bg-green-500 animate-pulse" />
+                            <span className="text-sm text-red-500 opacity-75 tracking-wider">ALERT READY</span>
+                          </div>
+                          <Volume2 className="w-7 h-7 sm:w-8 sm:h-8 text-red-500 
+                            group-hover:scale-110 transition-transform" />
+                        </div>
+                      </div>
                     </button>
                   ))}
                 </div>
               )}
 
               {isAnalyzing && (
-                <AnalysisProgress 
-                  isEmergencyFlash={isEmergencyFlash}
-                  analysisProgress={analysisProgress}
-                />
+                <div className="h-[calc(100vh-200px)] flex items-center justify-center">
+                  <div className="text-red-500 text-center space-y-4">
+                    <div className="animate-[pulse_1s_ease-in-out_infinite] text-3xl font-bold">
+                      ⚠️ 違反行為検出中 ⚠️
+                    </div>
+                  </div>
+                </div>
               )}
             </div>
           </main>
