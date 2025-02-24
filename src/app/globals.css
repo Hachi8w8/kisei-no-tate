@@ -30,4 +30,21 @@
 
 .cursor-warning {
   cursor: url('/images/2325796.png') 16 16, pointer;
+}
+
+@keyframes marquee {
+  0% {
+    transform: translateX(100vw);
+  }
+  100% {
+    transform: translateX(-100%);
+  }
+}
+
+.marquee-text {
+  white-space: nowrap;
+  animation: marquee 40s linear infinite;
+  position: relative;
+  width: max-content;
+  letter-spacing: 0.05em;
 } 

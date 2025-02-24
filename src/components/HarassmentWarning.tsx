@@ -5,6 +5,9 @@ import { useAudio } from '../hooks/useAudio';
 import { HarassmentType } from '../types/harassment';
 import { WarningHeader } from './WarningHeader';
 
+const TELOP_TEXT = "みなさん、今は令和ですよ！アップデートしよ🤍";
+const REPEAT_COUNT = 20;  // 繰り返す回数
+
 export const HarassmentWarning: React.FC = () => {
   const [isAnalyzing, setIsAnalyzing] = useState(false);
   const [selectedType, setSelectedType] = useState<HarassmentType | null>(null);
@@ -153,25 +156,25 @@ export const HarassmentWarning: React.FC = () => {
                   <div className="w-full max-w-3xl bg-black p-8 rounded-lg border-2 border-red-500/30">
                     <div className="space-y-12 text-center">
                       {/* 警告タイトル */}
-                      <div className="space-y-8">
+                      <div className="space-y-4 sm:space-y-8">
                         {/* タイトル */}
-                        <div className="flex items-center justify-center gap-4">
-                          <span className="text-5xl text-yellow-500 animate-blink">⚠️</span>
-                          <div className="text-4xl sm:text-5xl font-togalite text-red-500 
+                        <div className="flex items-center justify-center gap-2 sm:gap-4">
+                          <span className="hidden sm:inline text-4xl sm:text-5xl text-yellow-500 animate-blink">⚠️</span>
+                          <div className="text-3xl sm:text-4xl md:text-5xl font-togalite text-red-500 
                             animate-blink
                             [text-shadow:0_0_10px_rgba(239,68,68,0.5)]">
                             {selectedType && getTitleParts(selectedType)[0]}行為を検出
                           </div>
-                          <span className="text-5xl text-yellow-500 animate-blink">⚠️</span>
+                          <span className="hidden sm:inline text-4xl sm:text-5xl text-yellow-500 animate-blink">⚠️</span>
                         </div>
 
                         {/* 警告レベルと詳細 */}
-                        <div className="p-8 bg-black rounded-lg border border-red-500/30">
-                          <div className="flex flex-col items-center justify-center gap-2">
-                            <div className="text-2xl text-red-500 font-togalite">
+                        <div className="p-4 sm:p-6 md:p-8 bg-black rounded-lg border border-red-500/30">
+                          <div className="flex flex-col items-center justify-center gap-1 sm:gap-2">
+                            <div className="text-xl sm:text-2xl md:text-3xl text-red-500 font-togalite">
                               {currentWarning && splitWarningMessage(currentWarning).level}
                             </div>
-                            <div className="text-4xl sm:text-5xl font-togalite text-red-500
+                            <div className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-togalite text-red-500
                               [text-shadow:0_0_10px_rgba(239,68,68,0.5)]">
                               {currentWarning && splitWarningMessage(currentWarning).detail}
                             </div>
@@ -187,12 +190,19 @@ export const HarassmentWarning: React.FC = () => {
                       </div> */}
 
                       {/* 罰則内容 */}
-                      <div className="p-8 bg-black rounded-lg border border-red-500/30">
-                        <div className="text-xl sm:text-2xl font-togalite text-white mb-6">
+                      <div className="p-4 sm:p-6 md:p-8 bg-black rounded-lg border border-red-500/30">
+                        <div className="text-lg sm:text-xl md:text-2xl font-togalite text-white mb-4 sm:mb-6">
                           違反者への執行命令
                         </div>
-                        <div className="text-2xl sm:text-3xl font-togalite text-white">
+                        <div className="text-xl sm:text-2xl md:text-3xl font-togalite text-white">
                           {currentFine}
+                        </div>
+                      </div>
+
+                      {/* テロップ */}
+                      <div className="absolute bottom-0 left-0 right-0 bg-black border-t border-red-500/30 py-4 overflow-hidden">
+                        <div className="marquee-text text-xl sm:text-2xl font-togalite text-white">
+                          {Array(REPEAT_COUNT).fill(TELOP_TEXT).join('')}
                         </div>
                       </div>
                     </div>
