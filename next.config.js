@@ -9,18 +9,19 @@ const nextConfig = {
         options: {
           name: '[name].[ext]',
           outputPath: 'static/fonts/',
-          publicPath: '/_next/static/fonts/'
+          publicPath: '/kisei-no-tate/static/fonts/'
         }
       }
     });
     return config;
   },
   output: 'export',
-  basePath: '/kisei-no-tate',  // リポジトリ名に修正
+  basePath: '/kisei-no-tate',
   images: {
     unoptimized: true,
   },
-  distDir: 'docs'
+  distDir: 'docs',
+  trailingSlash: true
 }
 
 module.exports = nextConfig 
