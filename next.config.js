@@ -11,21 +11,7 @@ const nextConfig = {
       use: {
         loader: 'file-loader',
         options: {
-          name: '[name].[ext]',
-          outputPath: 'static/fonts/',
-          publicPath: '/_next/static/fonts/'
-        }
-      }
-    });
-    // 音声ファイルの設定を追加
-    config.module.rules.push({
-      test: /\.(mp3|wav)$/,
-      use: {
-        loader: 'file-loader',
-        options: {
-          name: '[name].[ext]',
-          outputPath: 'static/sounds/',
-          publicPath: '/_next/static/sounds/'
+          name: 'static/fonts/[name].[ext]',
         }
       }
     });

@@ -26,12 +26,7 @@ export const useAudio = () => {
       alarmRef.current = null;
     }
 
-    // 本番環境とローカル環境でパスを切り替え
-    const audioPath = process.env.NODE_ENV === 'production'
-      ? '/_next/static/sounds/alarm.mp3'
-      : '/sounds/alarm.mp3';
-
-    const audio = new Audio(audioPath);
+    const audio = new Audio('/sounds/alarm.mp3');
     audio.loop = true;
     audio.volume = 0.5;
     audio.play()
