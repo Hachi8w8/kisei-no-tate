@@ -25,10 +25,25 @@ export const useAudio = () => {
       alarmRef.current.pause();
       alarmRef.current = null;
     }
+
     const audio = new Audio('/sounds/alarm.mp3');
     audio.loop = true;
     audio.volume = 0.5;
-    audio.play().catch(console.error);
+    audio.play()
+      .catch((error) => {
+        console.error('アラーム再生エラー:', error);
+        // ユーザーインタラクション後に再生を試みる場合のフォールバック
+        const retryPlay = () => {
+          audio.play()
+            .then(() => {
+              document.removeEventListener('click', retryPlay);
+              document.removeEventListener('touchstart', retryPlay);
+            })
+            .catch(console.error);
+        };
+        document.addEventListener('click', retryPlay);
+        document.addEventListener('touchstart', retryPlay);
+      });
     alarmRef.current = audio;
   }, []);
 
